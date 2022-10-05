@@ -160,8 +160,17 @@ main {
     justify-items: center;
     justify-content: space-evenly;
     p {
-        font-size: 2em;
+        font-size: 1.5em;
         
+    }
+    li {
+        font-size: .9em;
+        list-style: circle;
+        text-align: left;
+    }
+    img {
+        margin-top: 1em;
+        margin-bottom: 1em;
     }
     &:hover {
         @include hover;

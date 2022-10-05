@@ -106,3 +106,7 @@ let n1 = parseInt (prompt ("ingrese el primer numero"));
 let operacion = prompt ("ingrese el operador");
 let n2 = parseInt(prompt ("ingrese el segundo numero"));
 alert(calculadora(n1, n2, operacion));
+
+
+
+

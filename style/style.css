@@ -214,7 +214,16 @@ main {
   justify-content: space-evenly;
 }
 .card-servicio p, .card-servicio-empresas p {
-  font-size: 2em;
+  font-size: 1.5em;
+}
+.card-servicio li, .card-servicio-empresas li {
+  font-size: 0.9em;
+  list-style: circle;
+  text-align: left;
+}
+.card-servicio img, .card-servicio-empresas img {
+  margin-top: 1em;
+  margin-bottom: 1em;
 }
 .card-servicio:hover, .card-servicio-empresas:hover {
   background-color: rgb(182, 180, 180);
