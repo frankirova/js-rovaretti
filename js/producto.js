@@ -8,51 +8,64 @@ function Producto (nombre,stock,precio){
     this.stock = stock;
     this.precio = precio;
 }
+
 let producto1 = new Producto ("TL-WR820N",10, 3550);
-let producto2 = new Producto ("Archer C20",10, 6.999);
-let producto3 = new Producto ("Archer C60",10, 17.600);
+let producto2 = new Producto ("ARCHER C20",10, 6999);
+let producto3 = new Producto ("ARCHER C60",10, 17600);
+let listaProductos = [producto1, producto2, producto3 ];
+
+// 
+let listaNombresProductos = [ ];
+for (const productos of listaProductos ){
+    listaNombresProductos.push(productos.nombre); 
+} 
 
 
 // ============ funcion carrito pagina productos ==========
 
-let productoElegido = prompt ("Ingrese un numero ¿Que producto desea elegir?\n1- TL-WR820N\n2- Archer C20\n3- Archer C60");
+let productoElegido = prompt ("Ingrese un numero ¿Que producto desea elegir? \n" + listaNombresProductos.join("\n") ).toUpperCase();
 let productoCantidad = prompt ("¿Que cantidad de productos desea?");
 
 
-function precio (){
-    precioTotal +=  (productoCantidad * producto1.precio);
+function precio (cantidad,precio){
+    precioTotal +=  (cantidad * precio);
 }
 
 function carrito (){
     
-    if (productoElegido == 1 && productoCantidad <= producto1.stock ){
-        precio(); 
+    if (productoElegido == "TL-WR820N" && productoCantidad <= producto1.stock ){
+        precio(productoCantidad, producto1.precio); 
         alert("Valor total: $" + precioTotal);
         
     }
     else if (productoCantidad >= producto1.stock){
-        alert ("Tenemos " + producto1.stock + "u. de este producto");
+        alert("Tenemos " + producto1.stock + "u. de este producto");
     }
-    else if (productoElegido == 2 && productoCantidad <= producto1.stock ){
-        precio();
+    else if (productoElegido == "ARCHER C20" && productoCantidad <= producto1.stock ){
+        precio(productoCantidad, producto2.precio); 
         alert("Valor total: $" + precioTotal);
     }
-    else if (productoCantidad >= producto1.stock){
-        alert ("Tenemos" + producto1.stock + "u. de este producto");
+    else if (productoCantidad >= producto2.stock){
+        alert("Tenemos" + producto2.stock + "u. de este producto");
     }
-    else if (productoElegido == 3 && productoCantidad <= producto1.stock ){
-        precio();
+    else if (productoElegido == "ARCHER C60" && productoCantidad <= producto1.stock ){
+        precio(productoCantidad, producto3.precio); 
         alert("Valor total: $" + precioTotal);
     }
-    else if (productoCantidad >= producto1.stock){
-        alert ("Tenemos" + producto1.stock + "u. de este producto");
+    else if (productoCantidad >= producto3.stock){
+        alert("Tenemos" + producto3.stock + "u. de este producto");
     }
 
     else {alert("Error");
     }
-}
+} 
 carrito ();
 
+function filtrarPrecio(){
+    let precioFiltrado = listaProductos.filter((listaProductos) => listaProductos.precio < 10000);
+    console.log (precioFiltrado)
+    }
+    document.querySelector("button").onclick = filtrarPrecio ();
 
 
 
