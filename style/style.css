@@ -353,6 +353,11 @@ main {
   text-align: center;
 }
 
+#catalogo {
+  display: flex;
+  flex-direction: row;
+}
+
 /* footer */
 /*VARIABLES*/
 /* footer */

@@ -110,20 +110,22 @@ function calculadora(){
     switch (operacion){
         case "+": 
             return n1 + n2 ;
-            break;
+            
 
         case "-" :
             return n1 - n2 ;
-            break;
+            
 
         case "*" :
             return n1 * n2 ;
-            break;
+            
 
         case "/" :
             return n1 / n2 ;
-            break;
+            
 
     }
 }
-document.querySelector("button").onclick = calculadora ();
+let boton = document.getElementById("botoncalcu")
+
+boton.addEventListener("click", calculadora)
