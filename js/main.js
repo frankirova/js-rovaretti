@@ -110,19 +110,19 @@ function calculadora(){
     switch (operacion){
         case "+": 
             return n1 + n2 ;
-            
+            break;
 
         case "-" :
             return n1 - n2 ;
-            
+            break;
 
         case "*" :
             return n1 * n2 ;
-            
+            break;
 
         case "/" :
             return n1 / n2 ;
-            
+            break;
 
     }
 }
