@@ -1,24 +1,39 @@
-//===========================var globales========================
-let precioTotal = 0;
-
-
-//============================objetos===============================
-
-function Producto (nombre,stock,precio,img,liCaracteristicas){
+// let precioTotal = 0;
+function Producto (id,nombre,stock,precio,img,liCaracteristicas,cantidad){
+    this.id = id
     this.nombre = nombre;
     this.stock = stock;
     this.precio = precio;
     this.img = img;
     this.liCaracteristicas = liCaracteristicas;
+    this.cantidad = cantidad
 }
 
-let producto1 = new Producto ("TL-WR820N",10, 3550,"../img/820n2-300x300.jpg",["Velocidad de transmisión Inalámbrica de 300Mbps.","IPTV es compatible con los nuevos protocolos para optimizar la transmisión","Los protocolos de seguridad protegen su red doméstica con firewalls y encriptación inalámbrica."]);
-let producto2 = new Producto ("ARCHER C20",10, 6999,"../img/archerc202-300x300.jpg",["Soporta el estándar 802.11ac.","Conexiones simultáneas de 2.4GHz y 5GHz","Señal omnidireccional estable."]);
-let producto3 = new Producto ("ARCHER C60",10, 17600,"../img/archerc602-300x300.jpg", ["Consigue un Wi-Fi más rápido","El avanzado Wi-Fi AC desbloquea el rendimiento de tus dispositivos inalámbricos","Funcionalidades avanzadas de software como Control Parental y Red de Invitados"]);
+let producto1 = new Producto (1,"TL-WR820N",10, 3550,"../img/820n2-300x300.jpg",["Velocidad de transmisión Inalámbrica de 300Mbps.","IPTV es compatible con los nuevos protocolos para optimizar la transmisión","Los protocolos de seguridad protegen su red doméstica con firewalls y encriptación inalámbrica."],1);
+let producto2 = new Producto (2,"ARCHER C20",10, 6999,"../img/archerc202-300x300.jpg",["Soporta el estándar 802.11ac.","Conexiones simultáneas de 2.4GHz y 5GHz","Señal omnidireccional estable."],1);
+let producto3 = new Producto (3,"ARCHER C60",5, 17600,"../img/archerc602-300x300.jpg", ["Consigue un Wi-Fi más rápido","El avanzado Wi-Fi AC desbloquea el rendimiento de tus dispositivos inalámbricos","Funcionalidades avanzadas de software como Control Parental y Red de Invitados"],1);
 
 let listaProductos = [producto1, producto2, producto3 ];
 let listaProductosCStock = listaProductos.filter((producto) => producto.stock > 0) ;
+console.log (listaProductos)
+// ========================================================================================
+const contenedorCarrito = document.getElementById("contenedor-carrito")
 
+
+const precioTotal = document.getElementById ("precio-total")
+
+
+let carrito = [];
+document.addEventListener ('DOMContentLoaded',  ()=> {
+    if(localStorage.getItem('carrito')){
+        carrito = JSON.parse(localStorage.getItem('carrito'));
+        actualizarCarrito()
+    }
+
+})
+
+
+// =====================carrito========================
 
 let catalogo = document.getElementById("catalogo")
 
@@ -32,66 +47,58 @@ for(const producto of listaProductosCStock){
         <li class="item-lista-internet">${producto.liCaracteristicas[1]}</li>
         <li class="item-lista-internet">${producto.liCaracteristicas[2]}</li>
     </ul> 
-    <p><b>$${producto.precio}</b></p> `;
-    catalogo.append(card);
-}
+    <p><b>$${producto.precio}</b></p> 
+    <button id="agregar ${producto.id}"class="boton-contacto">Agregar al carrito</button> `;
     
-// ============ funcion carrito pagina productos ==========
+    catalogo.appendChild(card);
+    const boton = document.getElementById(`agregar ${producto.id}`);
+    boton.addEventListener("click",()=>{
+        agregarAlCarrito(producto.id)
 
-let productoElegido = prompt ("Ingrese un numero ¿Que producto desea elegir? \n" + listaNombresProductos.join("\n") ).toUpperCase();
-let productoCantidad = prompt ("¿Que cantidad de productos desea?");
+    })
+}; 
 
-
-function precio (cantidad,precio){
-    precioTotal +=  (cantidad * precio);
+const agregarAlCarrito = (prodId) => {
+    const existe = carrito.some(prod => prod.id === prodId);
+    if(existe){
+        const prod = carrito.map(prod => {
+            if(prod.id === prodId){
+                prod.cantidad++
+            }
+        })
+    }
+    else{
+    const item = listaProductos.find((prod) => prod.id === prodId);
+    carrito.push(item );
+    
+    console.log(carrito);
+};
+actualizarCarrito();
+}
+const eliminarDelCarrito = (prodId) => {
+    const item = carrito.find((prod) => prod.id === prodId)
+    const indice = carrito.indexOf(item)
+    carrito.splice(indice,1)
+    actualizarCarrito();
 }
 
-function carrito (){
-    
-    if (productoElegido == "TL-WR820N" && productoCantidad <= producto1.stock ){
-        precio(productoCantidad, producto1.precio); 
-        alert("Valor total: $" + precioTotal);
+
+const actualizarCarrito = ()=> {
+    contenedorCarrito.innerHTML = ``
+    carrito.forEach((prod) => {
+        const div = document.createElement('div')
+        div.className = ("producto-carrito")
+        div.innerHTML= 
+        `<img class = "carrito-img"src = ${prod.img}></img>
+        <p>${prod.nombre}</p>
+        <p>$${prod.precio}</p>
+        <p>Cantidad: <span id="cantidad">${prod.cantidad}</span></p>
+        <button class="eliminar" onclick = "eliminarDelCarrito(${prod.id})"><i class="fa-solid fa-trash-xmark icon-carrito"></i></button>
+        `
         
-    }
-    else if (productoCantidad >= producto1.stock){
-        alert("Tenemos " + producto1.stock + "u. de este producto");
-    }
-    else if (productoElegido == "ARCHER C20" && productoCantidad <= producto1.stock ){
-        precio(productoCantidad, producto2.precio); 
-        alert("Valor total: $" + precioTotal);
-    }
-    else if (productoCantidad >= producto2.stock){
-        alert("Tenemos" + producto2.stock + "u. de este producto");
-    }
-    else if (productoElegido == "ARCHER C60" && productoCantidad <= producto1.stock ){
-        precio(productoCantidad, producto3.precio); 
-        alert("Valor total: $" + precioTotal);
-    }
-    else if (productoCantidad >= producto3.stock){
-        alert("Tenemos" + producto3.stock + "u. de este producto");
-    }
-
-    else {alert("Error");
-    }
-} 
-carrito ();
-
-function filtrarPrecio(){
-    let precioFiltrado = listaProductos.filter((listaProductos) => listaProductos.precio < 10000);
-    console.log (precioFiltrado)
-    }
-    document.querySelector("button").onclick = filtrarPrecio ();
-
-
-
-
-
-
-
-
-
-//===================funcion iva por si la necesito despues================
-
-// function iva(){
-//     let precioIva = (precioTotal * 1.21);
-// }
+        contenedorCarrito.appendChild(div)
+        localStorage.setItem('carrito', JSON.stringify(carrito))
+        
+    })
+    precioTotal.innerText = carrito.reduce((acc,prod) => acc + prod.precio, 0 )
+}

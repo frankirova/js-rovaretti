@@ -1,11 +1,4 @@
-// let menuFinal = prompt("1- Elegir abono/n2- ESC")
-// let precioInstalacion = 9500;
-// let abonoElegido = prompt ("Ingrese un numero\n1- Hasta 4MB\n2- Hasta 6MB\n3- Hasta 10MB");
-// let pagoElegido = prompt ("Ingrese un numero\n1- Efectivo / Transferencia\n2- Tarjeta de credito"); 
-let precioTotal = 0;
-
-
-// ==============Obj abonos=================
+ // ==============Obj abonos=================
 
 
 function Abono (id,nombre, precio,liCaracteristicas){
@@ -24,7 +17,7 @@ let abono3 = new Abono (3, "15MB", 3890,["Cargo de instalación $8300","No requi
 
 
 let listaAbonos = [abono1,abono2,abono3 ];
-
+console.log(listaAbonos)
 let listaNombresAbonos = [ ];
 for (const abono of listaAbonos){
     listaNombresAbonos.push(abono.nombre)
@@ -35,59 +28,79 @@ for (const abono of listaAbonos){
 } 
 let listaNombresClientes = [ ]
 
+let abonoElegido=[ ] ;
+
+// nombreAbonoElegido = abonoElegido.
+
+
+
 
 // ================Elegir abono==================
 
+const formulario =document.getElementById("formulario") ;
+const serviciosResidenciales = document.getElementById("servicios-residenciales");
 
-let serviciosResidenciales = document.getElementById("servicios-residenciales");
+const reset = document.getElementById("btn-reset");
 
-function cardss(){
-    for(const abono of listaAbonos){
-        let card = document.createElement ("div");
-        card.className = "card-servicio";
-        card.innerHTML = `<p class="titulo-card">${abono.nombre}</p>
-        <ul class="lista-servicios">
-            <li class="item-lista-internet">${abono.liCaracteristicas[0]}</li>
-            <li class="item-lista-internet">${abono.liCaracteristicas[1]}</li>
-            <li class="item-lista-internet">${abono.liCaracteristicas[2]}</li>
-        </ul> 
-        <p><b>$${abono.precio}</b></p>
-        <button type="button" id="${abono.id}" class="btn btn-success">Elegir abono</button>`;
-        serviciosResidenciales.append (card)
-    }
-} 
-cardss()
+for(const abono of listaAbonos){
+    let card = document.createElement ("div");
+    card.className = "card-servicio";
+    card.innerHTML = `<p class="titulo-card">${abono.nombre}</p>
+    <ul class="lista-servicios">
+        <li class="item-lista-internet">${abono.liCaracteristicas[0]}</li>
+        <li class="item-lista-internet">${abono.liCaracteristicas[1]}</li>
+        <li class="item-lista-internet">${abono.liCaracteristicas[2]}</li>
+    </ul> 
+    <p><b>$${abono.precio}</b></p>
+    <button =onclick id="${abono.id}" class="btn btn-success">Elegir abono</button>`;
+    serviciosResidenciales.append (card)
+    const boton = document.getElementById(`${abono.id}`);
+    boton.addEventListener("click",()=>{
+        elegirAbono(abono.id);
+        mostrarFormulario ();
+        
+        
+    })
 
+} ;
+// ===============================================================
 
+let elegirAbono = (abonoId) => {
+const item = listaAbonos.find((abono) => abono.id === abonoId);
+    abonoElegido.push(item );
+};
+console.log(abonoElegido)
+// =============formulario=====================
 
+function storageForm(){
+    document.addEventListener ('DOMContentLoaded',  ()=> {
 
-// ===============eventoform=====================
-
-
-let btnSuccess1 = document.getElementById ("1");
- 
-
-btnSuccess1.addEventListener("click", mostrarFormulario);
-
-let btnSuccess2 = document.getElementById ("2");
- 
-
-btnSuccess2.addEventListener("click", mostrarFormulario);
-
-let btnSuccess3 = document.getElementById ("3");
- 
-
-btnSuccess3.addEventListener("click", mostrarFormulario);
-
-// ==============formulario ==================
+        if(localStorage.getItem('cliente')){
+            cliente = JSON.parse(localStorage.getItem('cliente'));
+            abonoElegido = JSON.parse(localStorage.getItem('abonoElegido'))
+        }
+    })
+    localStorage.setItem('cliente', JSON.stringify(cliente))
+    localStorage.setItem('abonoElegido', JSON.stringify(abonoElegido))
+    mostrarMensajeBienvenida()
+};
+function mostrarMensajeBienvenida (){
+    serviciosResidenciales.innerHTML =  `
+    <div>
+    <p><b>Bienvenido ${cliente[0]} a Red Metropolitana</b></p>
+    <p>Abono elegido: <b>${abonoElegido[0]}</b></p>
+    <p>total : $${abonoElegido[2]}</p>
+    </div>
+    `
+}
 
 function mostrarFormulario (){
-serviciosResidenciales.innerHTML = 
+    serviciosResidenciales.innerHTML = 
     `<div class="container">
         <div class="row">
             <div class="col-md-12 formu">
                 <div class="well well-sm">
-                    <form class="form-horizontal" method="post">
+                    <form class="form-horizontal" method="get">
                         <fieldset>
                             <legend class="text-center header">Ingrese los siguientes datos para confirmar la instalacion:</legend>
 
@@ -159,7 +172,8 @@ serviciosResidenciales.innerHTML =
 
                             <div class="form-group">
                                 <div class="col-md-12 text-center contenedor-btn">
-                                    <button type="submit" id= "btnEnviar" class="btn btn-primary btn-lg">Enviar</button>
+                                    <button type="submit" id= "btn-enviar" class="btn btn-primary btn-lg">Enviar</button>
+                                    <button type="reset" id= "btn-reset" class="btn btn-primary btn-lg">Reset</button>
                                 </div>
                             </div>
                         </fieldset>
@@ -168,170 +182,37 @@ serviciosResidenciales.innerHTML =
             </div>
         </div>
     </div>`
-}
-function mostrarCards (){
-    serviciosResidenciales.remove();
-    serviciosResidenciales.append()
+    capturar();
+    const enviar = document.getElementById("btn-enviar");
+    enviar.addEventListener("click",storageForm);
     
-}
-// =========back===============
+};
 
+function capturar(){    
+    const nombre =document.getElementById("fname") 
+    const apellido =document.getElementById("lname") 
+    const dni =document.getElementById("dni")
+    const direccion =document.getElementById("direccion") 
+    const eMail =document.getElementById("email")
+    const telefono =document.getElementById("phone")
+    const ref =document.getElementById("message")
 
-let btnBack = document.getElementById ("btn-back") ;
-btnBack.addEventListener ("click", mostrarCards);
-
-
-// =================boton enviar================
-
-
-let btnEnviar = document.getElementById("btnEnviar");
-btnEnviar.addEventListener ('input', ()=>{
-    let nombre = fname.value
-})
-
-
-// ================tomar datos=============
-
-
-let nombre = document.getElementById ("fname").value;
-let apellido = document.getElementById("lname").value;
-let dni = document.getElementById("dni").value;
-let domicilio = document.getElementById("direccion").value; let eMail = document.getElementById("email").value;
-let telefono = document.getElementById("phone").value;
-let ref = document.getElementById("message").value;
-
-nombre.addEventListener('change', ()=>{console.log ("ea")})
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// ==============bucle===============
-
-
-while(menuFinal !=2 ){
-    let nombre = prompt("Ingrese su nombre completo");
-    listaNombresClientes.push(nombre)
-
-
-    let saludar = document.getElementById("saludar")
-    function saludo(){
-        saludar.innerText = "Bienvenido a RM " + nombre + "necesitamos los siguientes datos para coonfirmar su instalacion"
-    }
-    // saludo();
-
-
-    function totalPago (){
-    
-        if (abonoElegido == 1 && pagoElegido == 1 ){
-            precioTotal = precioInstalacion + abono1.precio;
-            alert("Valor total: $" + precioTotal);
-            
-        }
-        else if (abonoElegido == 1 && pagoElegido == 2 ){
-            precioTotal = ((precioInstalacion*0.20+precioInstalacion) + abono1.precio) ;
-            alert ("Valor total: $" + precioTotal) ;
-        }
-        else if (abonoElegido == 2 && pagoElegido == 1){
-            precioTotal = precioInstalacion + abono2.precio;
-            alert("Valor total: $" + precioTotal);
-        }
-        else if (abonoElegido == 2 && pagoElegido == 2 ){
-            precioTotal = ((precioInstalacion*0.20+precioInstalacion) + abono2.precio) ;
-            alert ("Valor total: $" + precioTotal) ;
-        }
-
-        else if (abonoElegido == 3 && pagoElegido == 1){
-            precioTotal = precioInstalacion + abono3.precio;
-            alert("Valor total: $" + precioTotal);
-        }
-        else if (abonoElegido == 3 && pagoElegido == 2 ){
-            precioTotal = ((precioInstalacion*0.20+precioInstalacion) + abono3.precio) ;
-            alert ("Valor total: $" + precioTotal) ;
-        }
-
-
-        else {alert("Error");
-        }
-    }
-    // totalPago ();
-
-    // alert ("Bienvenido a RM " + nombre + "necesitamos los siguientes datos para coonfirmar su instalacion");
-
-
-    for (let i=1; i < 2500; i++){
-        let nCliente = i;        
-        alert("su numero de cliente es " + nCliente);
-        break;
-    }
-
-    if (apellido,domicilio,nTelefono,eMail == ""){
-        alert ("vuelva a ingresar los datos");
-    }
-// let menuFinal = prompt("1- Listo, graciass/n2- ESC")
-}
-// Como hago para recolectar esos datos y guardarlos en algun lado???
-// Como hago para que todo esto se repita ???
-
-
-
-// function calculadora(){
+    nombre.addEventListener('change',() => cliente.push(nombre.value))
+    apellido.addEventListener('change',() => cliente.push(apellido.value))
+    dni.addEventListener('change',() => cliente.push(dni.value))
+    direccion.addEventListener('change',() => cliente.push(direccion.value))
+    eMail.addEventListener('change',() => cliente.push(eMail.value))
+    telefono.addEventListener('change',() => cliente.push(telefono.value))
+    ref.addEventListener('change',() => cliente.push(ref.value))
 
     
-//     let n1 = parseInt (prompt ("ingrese el primer numero"));
-//     let operacion = prompt ("ingrese el operador");
-//     let n2 = parseInt(prompt ("ingrese el segundo numero"));
-       
-//     switch (operacion){
-//         case "+": 
-//             return n1 + n2 ;
-//             break;
+};
 
-//         case "-" :
-//             return n1 - n2 ;
-//             break;
+let cliente = [ ];
+console.log(cliente)
 
-//         case "*" :
-//             return n1 * n2 ;
-//             break;
+// for (const nombreAbonoElegido of abonoElegido) (
+//     nombreAbonoElegido = abono.nombre
+// ){
 
-//         case "/" :
-//             return n1 / n2 ;
-//             break;
-
-//     }
 // }
-// let boton = document.getElementById("botoncalcu")
-
-// boton.addEventListener("click", calculadora)
